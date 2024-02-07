@@ -63,7 +63,6 @@ M.run = function ()
       vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
       -- Options are vim.bo.X, and in VimL you use `:set X`
       -- Variables are vim.b.X, and in VimL you use :let b:X`
-      vim.api.nvim_buf_set_option(buf_id, 'modified', false)
       vim.api.nvim_buf_set_var(buf_id, 'RemoteText', { id = id, hash = hash, branch = 'main' })
       vim.api.nvim_create_autocmd('BufWriteCmd', {
         buffer = buf_id,
@@ -72,7 +71,7 @@ M.run = function ()
           -- Swapped to `0` (the current buffer) in case `:sav` is used
           -- local new_lines = vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
           local new_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-          local details = vim.api.nvim_buf_get_var(0, 'RemoteText')
+          local details = vim.bo.RemoteText
           local new_json = {
             name = vim.fn.expand('%:t'),
             id = details.id,
@@ -90,6 +89,10 @@ M.run = function ()
 
           if saveResp.status == 200 then
             vim.api.nvim_buf_set_option(0, 'modified', false)
+
+            local commit = vim.json.decode(saveResp.body)
+
+            vim.bo.RemoteText.hash = commit.hash
           end
         end
       })
@@ -106,6 +109,8 @@ M.run = function ()
       vim.o.undolevels = -1
       vim.api.nvim_command "silent 1delete"
       vim.o.undolevels = levels
+
+      vim.api.nvim_buf_set_option(buf_id, 'modified', false)
 
       -- TODO: I *think* this does not properly load ftplugins
       vim.cmd.filetype("detect")
