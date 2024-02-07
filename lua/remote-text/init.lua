@@ -95,11 +95,17 @@ M.run = function ()
               print(k,v)
             end
 
-            print(vim.b.RemoteText)
+            for k, v in pairs(vim.b.RemoteText) do
+              print(k,v)
+            end
             vim.b.RemoteText.hash = commit.hash
-            print(vim.b.RemoteText)
-            vim.b.RemoteText = { hash = commit.hash }
-            print(vim.b.RemoteText)
+            for k, v in pairs(vim.b.RemoteText) do
+              print(k,v)
+            end
+            vim.b.RemoteText = vim.tbl_extend("force", details, { hash = commit.hash })
+            for k, v in pairs(vim.b.RemoteText) do
+              print(k,v)
+            end
           end
         end
       })
