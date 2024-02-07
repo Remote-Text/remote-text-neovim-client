@@ -1,6 +1,6 @@
-{ neovimUtils, ... }:
+{ vimUtils, ... }:
 
-neovimUtils.buildNeovimPlugin {
+vimUtils.buildVimPlugin {
   pname = "remote-text-nvim";
   version = "0.1";
   src = ./.;
