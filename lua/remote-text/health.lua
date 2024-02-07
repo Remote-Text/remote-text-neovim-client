@@ -14,14 +14,17 @@ local warn = h.warn or h.report_warn
 local function check_import(dep)
   if pcall(require, dep.module) then
     ok(dep.name .. ' installed')
+    return
   end
   error(dep.name .. ' not installed')
 end
 
 M.check = function ()
-  start("RemoteText report")
+  start("Checking for required dependencies")
 
   check_import({ module = 'plenary.curl', name = 'plenary.nvim' })
+
+  start("Checking for required configuration")
 
   if vim.g.RemoteText == nil then
     error("vim.g.RemoteText is not set!")
@@ -31,7 +34,7 @@ M.check = function ()
   if vim.g.RemoteText.api_url == nil then
     error("API URL is not set")
   else
-    ok("API URL is set to" .. vim.g.RemoteText.api_url)
+    ok("API URL is set to " .. vim.g.RemoteText.api_url)
   end
 end
 

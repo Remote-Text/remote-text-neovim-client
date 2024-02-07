@@ -52,7 +52,8 @@ M.run = function ()
 
       local file = vim.json.decode(contentResp.body)
 
-      local lines = {}
+      -- Credit to https://stackoverflow.com/a/19908161/8387516 for the string splitting
+      local lines = { "" }
       for s in (file.content .. "\n"):gmatch("([^\r\n]*)\n") do
         table.insert(lines,s)
       end
@@ -93,6 +94,21 @@ M.run = function ()
         end
       })
       vim.api.nvim_set_current_buf(buf_id)
+
+      -- -- In order to make :undo a no-op immediately after the buffer is read, we
+      -- -- need to do this dance with 'undolevels'.  Actually discarding the undo
+      -- -- history requires performing a change after setting 'undolevels' to -1 and,
+      -- -- luckily, we have one we need to do (delete the extra line from the :r
+      -- -- command)
+      -- -- (Comment straight from goerz/jupytext.vim)
+      -- (Comment from and credit to https://github.com/GCBallesteros/jupytext.nvim/blob/92547b14cfb101498e5f4200812c32eab3b84e43/lua/jupytext/init.lua#L148-L157)
+      local levels = vim.o.undolevels
+      vim.o.undolevels = -1
+      vim.api.nvim_command "silent 1delete"
+      vim.o.undolevels = levels
+
+      -- TODO: I *think* this does not properly load ftplugins
+      vim.cmd.filetype("detect")
     end)
 end
 
