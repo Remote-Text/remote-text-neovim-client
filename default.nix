@@ -1,6 +1,6 @@
-{ buildVimPlugin, buildNeovimPlugin, ... }:
+{ neovimUtils, ... }:
 
-buildNeovimPlugin {
+neovimUtils.buildNeovimPlugin {
   pname = "rmeote-text-nvim";
   version = "0.1";
   src = ./.;
