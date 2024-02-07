@@ -91,8 +91,15 @@ M.run = function ()
             vim.api.nvim_buf_set_option(0, 'modified', false)
 
             local commit = vim.json.decode(saveResp.body)
+            for k, v in pairs(commit) do
+              print(k,v)
+            end
 
+            print(vim.b.RemoteText)
             vim.b.RemoteText.hash = commit.hash
+            print(vim.b.RemoteText)
+            vim.b.RemoteText = { hash = commit.hash }
+            print(vim.b.RemoteText)
           end
         end
       })
