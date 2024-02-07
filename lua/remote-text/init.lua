@@ -71,7 +71,7 @@ M.run = function ()
           -- Swapped to `0` (the current buffer) in case `:sav` is used
           -- local new_lines = vim.api.nvim_buf_get_lines(buf_id, 0, -1, false)
           local new_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-          local details = vim.bo.RemoteText
+          local details = vim.b.RemoteText
           local new_json = {
             name = vim.fn.expand('%:t'),
             id = details.id,
@@ -92,7 +92,7 @@ M.run = function ()
 
             local commit = vim.json.decode(saveResp.body)
 
-            vim.bo.RemoteText.hash = commit.hash
+            vim.b.RemoteText.hash = commit.hash
           end
         end
       })
